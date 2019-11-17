@@ -4,3 +4,8 @@ out/*
 .idea/*
 *.iml
 /bin/
+*.class
+target/*
+target
+src/resources
+/target/
