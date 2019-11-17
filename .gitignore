@@ -1,5 +1,4 @@
 .DS_Store
-resources/*
 out/*
 .idea/*
 *.iml
@@ -7,5 +6,5 @@ out/*
 *.class
 target/*
 target
-src/resources
 /target/
+/data/
