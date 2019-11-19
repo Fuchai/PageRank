@@ -126,7 +126,7 @@ public class PositionalIndex {
 	}
 
 	double weight(String term, String doc) {
-		return 0;
+		return Math.sqrt(termFrequency(term, doc)) + Math.log10(((double) numDoc) / docFrequency(term));
 	}
 
 	double TPScore(String query, String doc) {
@@ -202,7 +202,7 @@ public class PositionalIndex {
 				if (term.equals(queryWords[j]))
 					queryWeight += 1.0;
 			}
-			weight = Math.sqrt(termFrequency(term, doc)) + Math.log10(((double) numDoc) / docFrequency(term));
+			weight = weight(term, doc);
 			sum = sum + weight * queryWeight;
 			vectorD[i] = weight;
 			vectorQ[i] = queryWeight;
