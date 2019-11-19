@@ -9,7 +9,7 @@ public class PreProcessing {
 	
 	public static void main(String[] args) {
 		PreProcessing pr = new PreProcessing();
-		File tempFile = new File("./data/testPre.txt");
+		File tempFile = new File(DataPath.dataPath+"/testPre.txt");
         String[] arr = pr.process(tempFile);
         for (int i = 0; i < arr.length; i++) {
         	System.out.println(arr[i] + i);
@@ -31,9 +31,10 @@ public class PreProcessing {
             while (s.hasNext()) {
                 String word = s.next();
                 word = word.toLowerCase();
-                word = word.replaceAll("[\\,;:?'(){}\\[\\]\"]", "");
-                word = word.replaceAll("([^0-9])\\.([^0-9])", "$1$2");
-                
+                if (!word.matches("([0-9]+)\\.([0-9])+")){
+                    word = word.replaceAll("[.,;:?'(){}\\[\\]\"]", "");
+                }
+
                 list.add(word);
             }
             String[] ret = new String[list.size()];

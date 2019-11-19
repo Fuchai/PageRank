@@ -3,9 +3,6 @@ import java.util.HashMap;
 public class PositionalIndex {
     String folderName;
     HashMap<String, TDFT> dict;
-    HashMap<String, Posting[]> termPostings;
-
-    HashMap<String, TDFT> dict;
     // term -> postings. A posting is all the indices of the term in a particular document
     HashMap<String, Posting[]> termPostings;
 
