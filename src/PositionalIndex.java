@@ -22,67 +22,66 @@ public class PositionalIndex {
 		numDoc = folder.list().length;
 		initTermPosting();
 	}
-	
+
 	void initTermPosting() {
-        List<String> allUniqueTerms = new ArrayList<>();
-        File[] contents = folder.listFiles();
-        HashMap<String, Integer> uniqueWordIndex = new HashMap<>();
-        try {
-            int clen = contents.length;
-        } catch (NullPointerException e) {
-            System.out.println(folder + " has no files");
-            e.printStackTrace();
-        }
-        
-        HashMap<String, ArrayList<Posting>> tempTermPostings = new HashMap<String, ArrayList<Posting>>();
-        int uniqueWords = 0;
-        String currentWord;
-        for (int i = 0; i < contents.length; i++) {
-            if (contents[i].isFile()) {
-                String[] words = pre.process(contents[i]);
-                HashMap<String, String> map = new HashMap<String, String>();
-                for (int j = 0; j < words.length; j++) {
-                    currentWord = words[j];
-                    if (map.containsKey(currentWord)) {
-                    	map.put(currentWord, j + "");
-                    }
-                    else {
-                    	map.put(currentWord, map.get(currentWord) + " " + j);
-                    }
-                    if (!uniqueWordIndex.containsKey(currentWord)) {
-                        allUniqueTerms.add(currentWord);
-                        uniqueWordIndex.put(currentWord, uniqueWords);
-                        uniqueWords++;
-                    }
-                }
-                // bit too messy
-                for (String term: map.keySet()) {
-                	String doc = contents[i].getName();
-                	String[] temp = map.get(term).split("\\s");
-                	int[] pos = new int[temp.length];
-                	for (int j = 0; j < temp.length; j++) {
-                		pos[j] = Integer.parseInt(temp[j]);
-                	}
-                	Posting p = new Posting(doc, pos);
-                	ArrayList<Posting> tempArr;
-                	if (tempTermPostings.containsKey(term)) {
-                		tempArr = tempTermPostings.get(term);
-                	} else {
-                		tempArr = new ArrayList<Posting>();
-                	}
-                	tempArr.add(p);
-                	tempTermPostings.put(term, tempArr);
-                }
-            }
-        }
-        for (String term: tempTermPostings.keySet()) {
-        	ArrayList<Posting> temp = tempTermPostings.get(term);
-        	Posting[] parr = (Posting[]) temp.toArray();
-        	termPostings.put(term, parr);
-        }
-        this.uniqueWordIndex = uniqueWordIndex;
-        this.allUniqueTerms = allUniqueTerms;
-    }
+		List<String> allUniqueTerms = new ArrayList<>();
+		File[] contents = folder.listFiles();
+		HashMap<String, Integer> uniqueWordIndex = new HashMap<>();
+		try {
+			int clen = contents.length;
+		} catch (NullPointerException e) {
+			System.out.println(folder + " has no files");
+			e.printStackTrace();
+		}
+
+		HashMap<String, ArrayList<Posting>> tempTermPostings = new HashMap<String, ArrayList<Posting>>();
+		int uniqueWords = 0;
+		String currentWord;
+		for (int i = 0; i < contents.length; i++) {
+			if (contents[i].isFile()) {
+				String[] words = pre.process(contents[i]);
+				HashMap<String, String> map = new HashMap<String, String>();
+				for (int j = 0; j < words.length; j++) {
+					currentWord = words[j];
+					if (map.containsKey(currentWord)) {
+						map.put(currentWord, j + "");
+					} else {
+						map.put(currentWord, map.get(currentWord) + " " + j);
+					}
+					if (!uniqueWordIndex.containsKey(currentWord)) {
+						allUniqueTerms.add(currentWord);
+						uniqueWordIndex.put(currentWord, uniqueWords);
+						uniqueWords++;
+					}
+				}
+				// bit too messy
+				for (String term : map.keySet()) {
+					String doc = contents[i].getName();
+					String[] temp = map.get(term).split("\\s");
+					int[] pos = new int[temp.length];
+					for (int j = 0; j < temp.length; j++) {
+						pos[j] = Integer.parseInt(temp[j]);
+					}
+					Posting p = new Posting(doc, pos);
+					ArrayList<Posting> tempArr;
+					if (tempTermPostings.containsKey(term)) {
+						tempArr = tempTermPostings.get(term);
+					} else {
+						tempArr = new ArrayList<Posting>();
+					}
+					tempArr.add(p);
+					tempTermPostings.put(term, tempArr);
+				}
+			}
+		}
+		for (String term : tempTermPostings.keySet()) {
+			ArrayList<Posting> temp = tempTermPostings.get(term);
+			Posting[] parr = (Posting[]) temp.toArray();
+			termPostings.put(term, parr);
+		}
+		this.uniqueWordIndex = uniqueWordIndex;
+		this.allUniqueTerms = allUniqueTerms;
+	}
 
 	int termFrequency(String term, String doc) {
 
@@ -99,8 +98,6 @@ public class PositionalIndex {
 		return termPostings.get(term).length;
 	}
 
-<<<<<<< HEAD
-=======
 	String postingsList(String term) {
 		Posting[] postings = termPostings.get(term);
 		String repr = "[";
@@ -108,8 +105,6 @@ public class PositionalIndex {
 			if (i != 0) {
 				repr += ",";
 			}
->>>>>>> origin/jooseung
-
 			Posting posting = postings[i];
 			String docRepr = "<";
 			docRepr += posting.doc;
@@ -164,19 +159,6 @@ public class PositionalIndex {
 				poss2 = posting.getPoss();
 			}
 		}
-
-<<<<<<< HEAD
-    double weight(String term, String doc) {
-        return 0;
-    }
-
-    double VSScore(String query, String doc) {
-        return 0;
-    }
-
-    double Relevance(String query, String doc) {
-        return 0.6*TPScore(query,doc)+0.4*VSScore(query,doc);
-=======
 		if (poss1.length == 0 || poss2.length == 0) {
 			return 17;
 		}
@@ -222,62 +204,60 @@ public class PositionalIndex {
 			vectorD[i] = weight;
 			vectorQ[i] = queryWeight;
 		}
-		
+
 		double[] base = new double[queryWords.length];
 		Arrays.fill(base, 0.0);
 		double distD = vectorDist(base, vectorD);
 		double distQ = vectorDist(base, vectorQ);
-		
-		return sum / (distD*distQ);
+
+		return sum / (distD * distQ);
 	}
-	
-	public static double vectorDist(double[] array1, double[] array2)
-    {
-        double sum = 0.0;
-        for(int i=0;i<array1.length;i++) {
-           sum = sum + Math.pow((array1[i]-array2[i]),2.0);
-        }
-        return Math.sqrt(sum);
->>>>>>> origin/jooseung
-    }
+
+	public static double vectorDist(double[] array1, double[] array2) {
+		double sum = 0.0;
+		for (int i = 0; i < array1.length; i++) {
+			sum = sum + Math.pow((array1[i] - array2[i]), 2.0);
+		}
+		return Math.sqrt(sum);
+	}
 
 	double Relevance(String query, String doc) {
-		return 0.6*TPScore(query, doc) + 0.4*VSScore(query, doc);
+		return 0.6 * TPScore(query, doc) + 0.4 * VSScore(query, doc);
 	}
-}
 
-class TDFT {
-	public String term;
-	public int docFreq;
+	class TDFT {
+		public String term;
+		public int docFreq;
 
-	public TDFT(String term, int dft) {
-		this.term = term;
-		this.docFreq = dft;
-	}
-}
-
-class Posting {
-	public String doc;
-	private int[] poss;
-	
-	Posting(String doc, int[] poss) {
-		this.doc = doc;
-		this.poss = poss;
-	}
-	
-	public void setPoss(int[] poss) {
-		this.poss = poss;
-		int last = Integer.MIN_VALUE;
-		for (int pos : poss) {
-			if (pos < last) {
-				System.out.println("You must sort the postings.");
-				System.exit(-1);
-			}
-			last = pos;
+		public TDFT(String term, int dft) {
+			this.term = term;
+			this.docFreq = dft;
 		}
 	}
 
-	public int[] getPoss() {
-		return poss;
+	class Posting {
+		public String doc;
+		private int[] poss;
+
+		Posting(String doc, int[] poss) {
+			this.doc = doc;
+			this.poss = poss;
+		}
+
+		public void setPoss(int[] poss) {
+			this.poss = poss;
+			int last = Integer.MIN_VALUE;
+			for (int pos : poss) {
+				if (pos < last) {
+					System.out.println("You must sort the postings.");
+					System.exit(-1);
+				}
+				last = pos;
+			}
+		}
+
+		public int[] getPoss() {
+			return poss;
+		}
 	}
 }
