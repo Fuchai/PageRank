@@ -16,9 +16,10 @@ public class PageRank {
     int[] totalLinks;
     private int totalNodes;
     double[] rank;
+    int stepsTaken;
 
     public static void main(String[] args) {
-        PageRank pr = new PageRank("data/WikiSportsGraph.txt", 0.1, 0.85);
+        PageRank pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.01, 0.85);
         System.out.println(Arrays.toString(pr.topKPageRank(5)));
 
     }
@@ -29,10 +30,10 @@ public class PageRank {
         this.beta = beta;
         this.graphFile = new File(graphFileName);
         processGraph(graphFile);
-        approxPageRank();
+        stepsTaken=approxPageRank();
     }
 
-    private void approxPageRank() {
+    private int approxPageRank() {
         double[] p = new double[totalNodes];
         Arrays.fill(p, 1.0 / totalNodes);
         boolean converged = false;
@@ -50,15 +51,15 @@ public class PageRank {
             }
         }
         rank=p;
+        return step;
     }
 
     private double norm(double[] p, double[] newP) {
         double normSum=0;
         for (int i = 0; i < p.length; i++) {
-            normSum+=(p[i]-newP[i])*(p[i]-newP[i]);
+            normSum+=Math.abs(p[i]-newP[i]);
         }
-        double ret=Math.sqrt(normSum);
-        return ret;
+        return normSum;
     }
 
     private double[] walk(double[] oldRank) {
@@ -151,9 +152,45 @@ public class PageRank {
         return rank[vertex];
     }
 
-    double[] trustRank(){
-        double[] trust = new double[0];
-        return trust;
+    double[] pageRank(){
+        return rank;
+    }
+
+    double[] trustRank(double[] trust){
+        DoubleInt ValInd=topK(trust, trust.length/4);
+        int[] trustPages = ValInd.indices;
+        double[] tr=trustWalk(rank, trustPages);
+        return tr;
+    }
+
+
+    private double[] trustWalk(double[] oldRank, int[] trustVertices) {
+        int n = oldRank.length;
+        double[] newRank = new double[n];
+        Arrays.fill(newRank, 0);
+        for (int node :
+                trustVertices) {
+            newRank[node] = (1-beta) / trustVertices.length;
+        }
+        for (int p = 0; p < n; p++) {
+            if (totalLinks[p]!=0){
+                // if not zero
+                boolean[] toLinks = fromToMatrix[p];
+                double delta =beta*oldRank[p]/totalLinks[p];
+                for (int q = 0; q < n; q++) {
+                    if (toLinks[q]){
+                        newRank[q]+=delta;
+                    }
+                }
+            }else{
+                // if zero
+                double delta =beta*oldRank[p]/n;
+                for (int q = 0; q < n; q++) {
+                    newRank[q]+=delta;
+                }
+            }
+        }
+        return newRank;
     }
 
     int numEdges(){
@@ -164,14 +201,21 @@ public class PageRank {
         return total;
     }
 
-    int[] topKPageRank(int k){
+    /**
+     * A method that calculates top k elements together with their indices
+     * @param array
+     * @param k
+     * @return
+     */
+    DoubleInt topK(double[] array, int k){
         int[] indices= new int[k];
         double[] values = new double[k];
         Arrays.fill(values, Double.MIN_VALUE);
         double min = Double.MIN_VALUE;
-        for (int i = 0; i < rank.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             double value;
-            value=rank[i];
+            value=array[i];
+            // if value is in top k so far
             if (value>min){
                 for (int j = 0; j < k; j++) {
                     if (values[j]<value){
@@ -180,7 +224,7 @@ public class PageRank {
                         break;
                     }
                 }
-
+                // update the min
                 min = Double.MAX_VALUE;
                 for (int j = 0; j < k; j++) {
                     if (values[j]<min){
@@ -189,8 +233,20 @@ public class PageRank {
                 }
             }
         }
-        return indices;
+        DoubleInt valInd=new DoubleInt();
+        valInd.value=values;
+        valInd.indices=indices;
+        return valInd;
+    }
+
+    int[] topKPageRank(int k){
+        DoubleInt valInd=topK(rank,k);
+        return valInd.indices;
     }
 }
 
 
+class DoubleInt {
+    public double[] value;
+    public int[] indices;
+}

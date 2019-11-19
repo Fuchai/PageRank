@@ -48,9 +48,6 @@ public class PositionalIndex {
         return repr;
     }
 
-    double weight(String term, String doc) {
-        return 0;
-    }
 
     double TPScore(String query, String doc) {
         String[] queryWords = query.split("\\s");
@@ -108,12 +105,16 @@ public class PositionalIndex {
         return minDiff;
     }
 
+    double weight(String term, String doc) {
+        return 0;
+    }
+
     double VSScore(String query, String doc) {
         return 0;
     }
 
     double Relevance(String query, String doc) {
-        return 0;
+        return 0.6*TPScore(query,doc)+0.4*VSScore(query,doc);
     }
 }
 
