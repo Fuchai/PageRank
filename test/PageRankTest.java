@@ -7,7 +7,7 @@ class PageRankTest {
     @Test
     void topKPageRank() {
 
-        PageRank pr = new PageRank("data/WikiSportsGraph.txt", 0.1, 0.85);
+        PageRank pr = new PageRank("C:/Users/JasonHu/Desktop/data/WikiSportsGraph.txt", 0.1, 0.85);
         int k = 5;
         int[] topkr = pr.topKPageRank(k);
         System.out.println(Arrays.toString(topkr));
