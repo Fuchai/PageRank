@@ -99,6 +99,8 @@ public class PositionalIndex {
 		return termPostings.get(term).length;
 	}
 
+<<<<<<< HEAD
+=======
 	String postingsList(String term) {
 		Posting[] postings = termPostings.get(term);
 		String repr = "[";
@@ -106,6 +108,7 @@ public class PositionalIndex {
 			if (i != 0) {
 				repr += ",";
 			}
+>>>>>>> origin/jooseung
 
 			Posting posting = postings[i];
 			String docRepr = "<";
@@ -162,6 +165,18 @@ public class PositionalIndex {
 			}
 		}
 
+<<<<<<< HEAD
+    double weight(String term, String doc) {
+        return 0;
+    }
+
+    double VSScore(String query, String doc) {
+        return 0;
+    }
+
+    double Relevance(String query, String doc) {
+        return 0.6*TPScore(query,doc)+0.4*VSScore(query,doc);
+=======
 		if (poss1.length == 0 || poss2.length == 0) {
 			return 17;
 		}
@@ -223,6 +238,7 @@ public class PositionalIndex {
            sum = sum + Math.pow((array1[i]-array2[i]),2.0);
         }
         return Math.sqrt(sum);
+>>>>>>> origin/jooseung
     }
 
 	double Relevance(String query, String doc) {

@@ -26,4 +26,22 @@ class PageRankTest {
             }
         }
     }
+
+    @Test
+    void main() {
+        System.out.println("epsilon=0.01, beta=0.85");
+        PageRank pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.01, 0.85);
+        System.out.println("Steps:"+pr.stepsTaken);
+        System.out.println("epsilon=0.01, beta=0.25");
+        pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.01, 0.25);
+        System.out.println("Steps:"+pr.stepsTaken);
+    }
+
+    @Test
+    void trustRank() {
+        PageRank pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.01, 0.85);
+        double[] ret=pr.trustRank(pr.pageRank());
+        System.out.println(Arrays.toString(ret));
+    }
+
 }
