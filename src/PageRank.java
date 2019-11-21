@@ -16,7 +16,9 @@ public class PageRank {
     int[] totalLinks;
     private int totalNodes;
     double[] rank;
+    double[] trustRank;
     int stepsTaken;
+    int trustStepsTaken;
 
     public static void main(String[] args) {
         PageRank pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.01, 0.85);
@@ -30,10 +32,10 @@ public class PageRank {
         this.beta = beta;
         this.graphFile = new File(graphFileName);
         processGraph(graphFile);
-        stepsTaken=approxPageRank();
+        approxPageRank();
     }
 
-    private int approxPageRank() {
+    private void approxPageRank() {
         double[] p = new double[totalNodes];
         Arrays.fill(p, 1.0 / totalNodes);
         boolean converged = false;
@@ -51,7 +53,7 @@ public class PageRank {
             }
         }
         rank=p;
-        return step;
+        stepsTaken=step;
     }
 
     private double norm(double[] p, double[] newP) {
@@ -156,11 +158,39 @@ public class PageRank {
         return rank;
     }
 
+//    double[] trustRank(double[] trust){
+//        DoubleInt ValInd=topK(trust, trust.length/4);
+//        int[] trustPages = ValInd.indices;
+//        double[] tr=trustWalk(rank, trustPages);
+//        return tr;
+//    }
+
     double[] trustRank(double[] trust){
-        DoubleInt ValInd=topK(trust, trust.length/4);
-        int[] trustPages = ValInd.indices;
-        double[] tr=trustWalk(rank, trustPages);
-        return tr;
+        TopKHelper topk=new TopKHelper();
+        topk.topK(trust,trust.length/4);
+        int[] trustPages = topk.indices;
+//        DoubleInt ValInd=topK(trust, trust.length/4);
+//        int[] trustPages = ValInd.indices;
+
+        double[] p = new double[totalNodes];
+        Arrays.fill(p, 1.0 / totalNodes);
+        boolean converged = false;
+        int step=0;
+        while (!converged) {
+            double[] newP=trustWalk(p, trustPages);
+            if (norm(p, newP)<=epsilon){
+                converged=true;
+            }
+            p=newP;
+            step++;
+            if (step == 100000) {
+                System.out.println("This is too many runs. I will abort the program");
+                System.exit(-1);
+            }
+        }
+        trustRank=p;
+        trustStepsTaken=step;
+        return p;
     }
 
 
@@ -201,52 +231,12 @@ public class PageRank {
         return total;
     }
 
-    /**
-     * A method that calculates top k elements together with their indices
-     * @param array
-     * @param k
-     * @return
-     */
-    DoubleInt topK(double[] array, int k){
-        int[] indices= new int[k];
-        double[] values = new double[k];
-        Arrays.fill(values, Double.MIN_VALUE);
-        double min = Double.MIN_VALUE;
-        for (int i = 0; i < array.length; i++) {
-            double value;
-            value=array[i];
-            // if value is in top k so far
-            if (value>min){
-                for (int j = 0; j < k; j++) {
-                    if (values[j]<value){
-                        values[j]=value;
-                        indices[j]=i;
-                        break;
-                    }
-                }
-                // update the min
-                min = Double.MAX_VALUE;
-                for (int j = 0; j < k; j++) {
-                    if (values[j]<min){
-                        min=values[j];
-                    }
-                }
-            }
-        }
-        DoubleInt valInd=new DoubleInt();
-        valInd.value=values;
-        valInd.indices=indices;
-        return valInd;
-    }
 
     int[] topKPageRank(int k){
-        DoubleInt valInd=topK(rank,k);
-        return valInd.indices;
+        TopKHelper topk=new TopKHelper();
+        topk.topK(rank,k);
+        return topk.indices;
     }
 }
 
 
-class DoubleInt {
-    public double[] value;
-    public int[] indices;
-}
