@@ -16,14 +16,14 @@ public class PositionalIndex {
     HashMap<String, Integer> uniqueWordIndex;
 
     public PositionalIndex(String folderName) {
-        long start = System.currentTimeMillis();
+//        long start = System.currentTimeMillis();
 
         this.folderName = folderName;
         folder = new File(this.folderName);
         numDoc = folder.list().length;
         initTermPosting();
-        long end = System.currentTimeMillis();
-        System.out.println("Positional index:" + (end-start));
+//        long end = System.currentTimeMillis();
+//        System.out.println("Positional index:" + (end-start));
     }
 
 
@@ -49,16 +49,16 @@ public class PositionalIndex {
                 String doc = contents[i].getName();
                 docs[i]=doc;
                 String[] words = pre.process(contents[i]);
-                HashMap<String, ArrayList<Integer>> map = new HashMap<>();
+                HashMap<String, ArrayList<Integer>> wordIndices = new HashMap<>();
                 for (int j = 0; j < words.length; j++) {
                     currentWord = words[j];
                     ArrayList<Integer> newArr;
-                    if (map.containsKey(currentWord)) {
-                        newArr=map.get(currentWord);
+                    if (wordIndices.containsKey(currentWord)) {
+                        newArr=wordIndices.get(currentWord);
                     }
                     else {
                         newArr=new ArrayList<>();
-                        map.put(currentWord, newArr);
+                        wordIndices.put(currentWord, newArr);
                     }
                     newArr.add(j);
                     if (!uniqueWordIndex.containsKey(currentWord)) {
@@ -67,12 +67,12 @@ public class PositionalIndex {
                         uniqueWords++;
                     }
                 }
-                for (String term: map.keySet()) {
+                for (String term: wordIndices.keySet()) {
 //                	String[] temp = map.get(term).split("\\s");
 //                	for (int j = 0; j < temp.length; j++) {
 //                		pos[j] = Integer.parseInt(temp[j]);
 //                	}
-                    Posting p = new Posting(doc, map.get(term));
+                    Posting p = new Posting(doc, wordIndices.get(term));
                     ArrayList<Posting> postings;
                     if (tempTermPostings.containsKey(term)) {
                         postings = tempTermPostings.get(term);
@@ -183,12 +183,14 @@ public class PositionalIndex {
         for (Posting posting : postings1) {
             if (posting.doc.equals(doc)) {
                 poss1 = posting.getPoss();
+                break;
             }
         }
 
         for (Posting posting : postings2) {
             if (posting.doc.equals(doc)) {
                 poss2 = posting.getPoss();
+                break;
             }
         }
 
@@ -251,6 +253,14 @@ public class PositionalIndex {
     double weight(String term, String doc) {
         return Math.sqrt(termFrequency(term, doc)) * Math.log10(((double) numDoc) / docFrequency(term));
     }
+
+    public static double vectorLen(double[] array)
+    {
+        double[] base = new double[array.length];
+        Arrays.fill(base, 0.0);
+        return vectorDist(base, array);
+    }
+
     public static double vectorDist(double[] array1, double[] array2)
     {
         double sum = 0.0;
