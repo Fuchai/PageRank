@@ -10,6 +10,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PositionalIndexTest {
 
+	@Test
+	void weightVSS() {
+		PositionalIndex pi=new PositionalIndex("./test resources/files");
+		System.out.println(pi.numDoc);
+		System.out.println(pi.termFrequency("bbbb", "ab.txt"));
+		System.out.println(pi.docFrequency("bbbb"));
+        System.out.println(pi.weight("bbbb","ab.txt"));
+	}
 
     @Test
     void initTermPosting() {
