@@ -8,7 +8,7 @@ class QueryProcessorTest {
 
     @Test
     void topKDocs1() {
-        QueryProcessor qp=new QueryProcessor("C:\\Users\\JasonHu\\Desktop\\data\\IR");
+        QueryProcessor qp=new QueryProcessor(DataPath.dataPath+"/IR");
         ArrayList<String> ret=qp.topKDocs("world series", 5);
         System.out.println(ret.toString());
     }
