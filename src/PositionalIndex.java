@@ -20,7 +20,12 @@ public class PositionalIndex {
 
         this.folderName = folderName;
         folder = new File(this.folderName);
-        numDoc = folder.list().length;
+        try{
+            numDoc = folder.list().length;
+        }catch (NullPointerException e){
+            System.out.println("You do not have files in the specified folder: "+this.folderName);
+            System.exit(-1);
+        }
         initTermPosting();
 //        long end = System.currentTimeMillis();
 //        System.out.println("Positional index:" + (end-start));
@@ -217,6 +222,8 @@ public class PositionalIndex {
     }
 
     double VSScore(String query, String doc) {
+        // The query order is changed, which does not change the VSScore due to symmetry of cosine similarity.
+
         String[] queryWords = query.split("\\s");
         if (queryWords.length == 0) {
             return 0;

@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -22,10 +21,11 @@ public class PageRank {
 
     public static void main(String[] args) {
         PageRank pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.01, 0.85);
-        System.out.println(Arrays.toString(pr.topKPageRank(5)));
-
+        pr.correctGraph(DataPath.dataPath+"/correctGraph.txt");
+        pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.01, 0.85);
+//        pr.correctGraph(DataPath.dataPath+"/correctGraph.txt");
     }
-    
+
     public PageRank(String graphFileName) {
     	this.graphFileName = graphFileName;
     	this.graphFile = new File(graphFileName);
@@ -44,6 +44,8 @@ public class PageRank {
     }
 
     private void approxPageRank() {
+        System.out.println("Calculating page rank. The page rank will be stored in the PageRank object until " +
+                "approxPageRank() is called again");
         double[] p = new double[totalNodes];
         Arrays.fill(p, 1.0 / totalNodes);
         boolean converged = false;
@@ -158,8 +160,47 @@ public class PageRank {
         }
     }
 
+    void correctGraph(String targetFileName){
+        File targetFile = new File(targetFileName);
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(targetFile));
+        } catch (IOException e) {
+            System.out.println("Cannot write");
+            System.exit(-2);
+        }
+
+        try {
+            writer.write(""+totalNodes+"\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < fromToMatrix.length; i++) {
+            boolean[] toPages=fromToMatrix[i];
+            for (int j = 0; j <toPages.length; j++) {
+                if (toPages[j]){
+                    String fromName=""+(i+1);
+                    String toName=""+(j+1);
+                    try {
+                        String line =fromName+ " "+toName+"\n";
+                        writer.write(line);
+                    } catch (IOException e) {
+                        System.out.println("Writer cannot write");
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        try {
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     double pageRankOf(int vertex){
-        return rank[vertex];
+        return rank[nameNode.get(""+vertex)];
     }
 
     double[] pageRank(){
@@ -262,7 +303,21 @@ public class PageRank {
     int[] topKPageRank(int k){
         TopKHelper topk=new TopKHelper();
         topk.topK(rank,k);
-        return topk.indices;
+        int[] indices= topk.indices;
+        return indicesToNames(indices);
+//        int[] names=new int[indices.length];
+//        for (int i = 0; i < indices.length; i++) {
+//            names[i]= Integer.parseInt(nodeName[indices[i]]);
+//        }
+//        return names;
+    }
+
+    int[] indicesToNames(int[] indices){
+        int[] names=new int[indices.length];
+        for (int i = 0; i < indices.length; i++) {
+            names[i]= Integer.parseInt(nodeName[indices[i]]);
+        }
+        return names;
     }
 }
 

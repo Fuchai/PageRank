@@ -22,7 +22,7 @@ public class SpamFarm {
         targetString = target + "";
         this.numSpamPages = numSpamPages;
     }
-    
+
     String getTargetString() {
     	return targetString;
     }
@@ -32,20 +32,20 @@ public class SpamFarm {
 
         BufferedReader reader = new BufferedReader(new FileReader(graphFile));
         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-        
+
         String currentLine;
 
         currentLine = reader.readLine();
         try {
         	totalNodes = Integer.parseInt(currentLine);
         } catch (NumberFormatException e) {
-        	System.out.println(currentLine + " is not a valid"); 
+        	System.out.println(currentLine + " is not a valid");
         }
         writer.write(totalNodes + numSpamPages + System.getProperty("line.separator"));
         while((currentLine = reader.readLine()) != null) {
             writer.write(currentLine + System.getProperty("line.separator"));
         }
-        
+
         for (int i = 1; i <= numSpamPages; i++) {
 			int n = totalNodes + i;
 			writer.write(n + " " + targetString + System.getProperty("line.separator"));
