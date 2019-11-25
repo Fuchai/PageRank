@@ -200,7 +200,7 @@ public class PageRank {
     }
 
     double pageRankOf(int vertex){
-        return rank[vertex];
+        return rank[nameNode.get(""+vertex)];
     }
 
     double[] pageRank(){
@@ -303,7 +303,21 @@ public class PageRank {
     int[] topKPageRank(int k){
         TopKHelper topk=new TopKHelper();
         topk.topK(rank,k);
-        return topk.indices;
+        int[] indices= topk.indices;
+        return indicesToNames(indices);
+//        int[] names=new int[indices.length];
+//        for (int i = 0; i < indices.length; i++) {
+//            names[i]= Integer.parseInt(nodeName[indices[i]]);
+//        }
+//        return names;
+    }
+
+    int[] indicesToNames(int[] indices){
+        int[] names=new int[indices.length];
+        for (int i = 0; i < indices.length; i++) {
+            names[i]= Integer.parseInt(nodeName[indices[i]]);
+        }
+        return names;
     }
 }
 
