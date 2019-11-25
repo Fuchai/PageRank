@@ -16,7 +16,8 @@ public class SpamFarmTest {
         try {
 			sf.createSpam(DataPath.dataPath+"/testfile.txt");
 			System.out.println(sf.getTargetString());
-			System.out.println(pr.nodeName[target - 1]);
+			System.out.println(pr.nodeName[pr.nameNode.get(""+target)]);
+//			System.out.println(pr.nodeName[pr.nameNode.get(target)]);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
