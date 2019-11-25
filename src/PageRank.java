@@ -25,6 +25,14 @@ public class PageRank {
         System.out.println(Arrays.toString(pr.topKPageRank(5)));
 
     }
+    
+    public PageRank(String graphFileName) {
+    	this.graphFileName = graphFileName;
+    	this.graphFile = new File(graphFileName);
+    	epsilon = 0.1;
+    	beta = 0.85;
+    	processGraph(graphFile);
+    }
 
     public PageRank(String graphFileName, double epsilon, double beta) {
         this.graphFileName = graphFileName;
@@ -156,6 +164,25 @@ public class PageRank {
 
     double[] pageRank(){
         return rank;
+    }
+    
+    int getMinIndex(double[] array) {
+        if (array == null) {
+            throw new IllegalArgumentException("The Array must not be null");
+        } else if (array.length == 0) {
+            throw new IllegalArgumentException("Array cannot be empty.");
+        }
+    
+        double min = array[0];
+        int index = 0;
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] < min) {
+                min = array[i];
+                index = i;
+            }
+        }
+    
+        return index;
     }
 
 //    double[] trustRank(double[] trust){

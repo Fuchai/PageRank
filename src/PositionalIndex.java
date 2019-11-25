@@ -2,6 +2,7 @@ import java.io.File;
 import java.util.*;
 
 public class PositionalIndex {
+
     PreProcessing pre;
     File folder;
     int numDoc;

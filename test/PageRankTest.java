@@ -26,6 +26,12 @@ class PageRankTest {
             }
         }
     }
+    
+    @Test
+    void numEdges() {
+    	PageRank pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.01, 0.85);
+    	System.out.println("numEdges : " + pr.numEdges());
+    }
 
     @Test
     void main() {
@@ -43,6 +49,13 @@ class PageRankTest {
         double[] ret=pr.trustRank(pr.pageRank());
         System.out.println(Arrays.toString(ret));
         System.out.println("Steps taken for trust rank: "+pr.trustStepsTaken);
+    }
+    
+    @Test
+    void trustRank2() {
+    	
+    	PageRank pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.01, 0.85);
+        double[] ret=pr.trustRank(pr.pageRank());
     }
 
 }
