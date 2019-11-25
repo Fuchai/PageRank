@@ -26,6 +26,12 @@ class PageRankTest {
             }
         }
     }
+    
+    @Test
+    void numEdges() {
+    	PageRank pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.01, 0.85);
+    	System.out.println("numEdges : " + pr.numEdges());
+    }
 
     @Test
     void main() {

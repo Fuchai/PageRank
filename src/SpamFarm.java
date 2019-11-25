@@ -11,21 +11,12 @@ public class SpamFarm {
 	private int totalNodes;
     String graphFileName;
     int target;
-    
-    public static void main(String[] args) {
-    	SpamFarm sf = new SpamFarm("./data/WikiSportsGraph.txt", 2);
-        try {
-			sf.createSpam("./data/testfile.txt");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    }
 
     public SpamFarm(String graphFileName, int target) {
         this.graphFileName = graphFileName;
         this.target = target;
         this.graphFile = new File(graphFileName);
-        numSpamPages = 10;
+        numSpamPages = 3000;
     }
 
     void createSpam(String fileName) throws IOException{
@@ -54,7 +45,8 @@ public class SpamFarm {
         		if (count++ == target) {
         			targetNode = currFromNode;
         			for (int i = 1; i <= numSpamPages; i++) {
-        				writer.write(currFromNode + " " + "/wiki/n" + i + System.getProperty("line.separator"));
+        				int n = totalNodes + i;
+        				writer.write(currFromNode + " " + "/wiki/" + n + System.getProperty("line.separator"));
         			}
         		}
         		currFromNode = words[0];
@@ -63,7 +55,100 @@ public class SpamFarm {
         }
         
         for (int i = 1; i <= numSpamPages; i++) {
-			writer.write("/wiki/n" + i + " " + targetNode + System.getProperty("line.separator"));
+			int n = totalNodes + i;
+			writer.write("/wiki/" + n + " " + targetNode + System.getProperty("line.separator"));
+		}
+        
+        writer.close();
+        reader.close();
+    }
+    
+    void createSpam2(String fileName) throws IOException{
+    	File tempFile = new File(fileName);
+
+        BufferedReader reader = new BufferedReader(new FileReader(graphFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+        
+        String currentLine;
+
+        currentLine = reader.readLine();
+        try {
+        	totalNodes = Integer.parseInt(currentLine);
+        } catch (NumberFormatException e) {
+        	System.out.println(currentLine + " is not a valid"); 
+        }
+        writer.write(totalNodes + numSpamPages + System.getProperty("line.separator"));
+        
+        int count = 0;
+        String currFromNode = "";
+        String targetNode = "";
+        String[] words;
+        while((currentLine = reader.readLine()) != null) {
+        	words=currentLine.split("\\s");
+        	if (!currFromNode.equals(words[0])) {
+        		if (count++ == target) {
+        			targetNode = currFromNode;
+        			for (int i = 1; i <= numSpamPages; i = i + 2) {
+        				int n = totalNodes + i;
+        				writer.write(currFromNode + " " + "/wiki/" + n + System.getProperty("line.separator"));
+        			}
+        		}
+        		currFromNode = words[0];
+        	}
+            writer.write(currentLine + System.getProperty("line.separator"));
+        }
+        
+        for (int i = 1; i <= numSpamPages; i = i + 2) {
+			int n = totalNodes + i;
+			int next = n + 1;
+			writer.write("/wiki/" + n + " " + targetNode + System.getProperty("line.separator"));
+			if ((next - totalNodes) <= numSpamPages) {
+				writer.write("/wiki/" + n + " " + "/wiki/" + next + System.getProperty("line.separator"));
+				writer.write("/wiki/" + next + " " + "/wiki/" + n + System.getProperty("line.separator"));
+			}
+		}
+        
+        writer.close();
+        reader.close();
+    }
+    
+    void createSpam3(String fileName) throws IOException{
+        File tempFile = new File(fileName);
+
+        BufferedReader reader = new BufferedReader(new FileReader(graphFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+        
+        String currentLine;
+
+        currentLine = reader.readLine();
+        try {
+        	totalNodes = Integer.parseInt(currentLine);
+        } catch (NumberFormatException e) {
+        	System.out.println(currentLine + " is not a valid"); 
+        }
+        writer.write(totalNodes + numSpamPages + System.getProperty("line.separator"));
+        
+        int count = 0;
+        String currFromNode = "";
+        String targetNode = "";
+        String[] words;
+        while((currentLine = reader.readLine()) != null) {
+        	words=currentLine.split("\\s");
+        	if (!currFromNode.equals(words[0])) {
+        		if (count++ == target) {
+        			targetNode = currFromNode;
+        				int n = totalNodes + 1;
+        				writer.write(currFromNode + " " + "/wiki/" + n + System.getProperty("line.separator"));
+        			
+        		}
+        		currFromNode = words[0];
+        	}
+            writer.write(currentLine + System.getProperty("line.separator"));
+        }
+        
+        for (int i = 1; i <= numSpamPages; i++) {
+			int n = totalNodes + i;
+			writer.write("/wiki/" + n + " " + targetNode + System.getProperty("line.separator"));
 		}
         
         writer.close();
