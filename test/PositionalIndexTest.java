@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 
+import javax.swing.text.Position;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -31,21 +32,65 @@ class PositionalIndexTest {
     @Test
     void termFrequency() {
         PositionalIndex pi=new PositionalIndex("./test resources/files");
-        System.out.println(pi.termFrequency("aa","a.txt"));
+        assertTrue(pi.termFrequency("aaaa","ab.txt")==3);
+        assertTrue(pi.termFrequency("aaa","ab.txt")==3);
+        assertTrue(pi.termFrequency("bbbb","ab.txt")==4);
+        assertTrue(pi.termFrequency("bbb","ab.txt")==3);
+        assertTrue(pi.termFrequency("bbbb","b.txt")==4);
+
     }
 
     @Test
     void TPScore2() {
         PositionalIndex pi=new PositionalIndex("./test resources/files");
         double tps=pi.TPScore("b a","ab.txt");
-        assertTrue(tps-0.11764<1e-4);
+        assertTrue(tps-0.2<1e-4);
     }
 
     @Test
     void VSScore1() {
-        PositionalIndex pi=new PositionalIndex("./test resources/files");
-        System.out.println(pi.VSScore("b a","ab.txt"));
+        PositionalIndex pi = new PositionalIndex("./test resources/files");
+        System.out.println(pi.VSScore("b a", "ab.txt"));
     }
+
+    @Test
+    void VSScoreManual() {
+        PositionalIndex pi = new PositionalIndex("./test resources/files");
+        System.out.println(pi.VSScore("b a", "ab.txt"));
+        // both b and a have dft=2
+        // N=3
+        // in target doc, both have 1 occurrence
+        System.out.println("vj:("+1*Math.log10(3.0/2)+","+1*Math.log10(3.0/2)+")");
+        // both have the same angle: \pi/4
+    }
+
+    @Test
+    void VSScoreManual2() {
+        // N=3
+        // tf b=1
+        // tf aa=2
+        // df b=2
+        // df aa=4
+        // hand calculated
+        // b, then aa
+        double[] vj={Math.sqrt(1)*Math.log10(3.0/2), Math.sqrt(2)*Math.log10(3.0/2)};
+        System.out.println("vj:("+vj[0]+","+vj[1]+")");
+        // both have the same angle: \pi/4
+        double len1=PositionalIndex.vectorLen(vj);
+        double [] vq={1,1};
+        double len2=PositionalIndex.vectorLen(vq);
+        System.out.println("hand calculated:");
+        double handc=(vj[0]+vj[1])/len1/len2;
+        System.out.println(handc);
+
+        PositionalIndex pi = new PositionalIndex("./test resources/files");
+        System.out.println("program return:");
+        System.out.println(pi.VSScore("b aa", "ab.txt"));
+
+        assertTrue(handc-pi.VSScore("b aa", "ab.txt")<1e-4);
+        assertTrue(pi.VSScore("b aa", "ab.txt")-handc<1e-4);
+    }
+
 
     @Test
     void Relevance() {
@@ -81,5 +126,12 @@ class PositionalIndexTest {
             System.out.println("VSScore: "+score);
             System.out.println();
         }
+    }
+
+    @Test
+    void vectorDist() {
+        double[] array1={1,2};
+        double[] array2={4,6};
+        assertTrue(Math.abs(PositionalIndex.vectorDist(array1,array2)-5)<1e-4);
     }
 }
