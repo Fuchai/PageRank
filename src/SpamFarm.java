@@ -42,28 +42,14 @@ public class SpamFarm {
         	System.out.println(currentLine + " is not a valid"); 
         }
         writer.write(totalNodes + numSpamPages + System.getProperty("line.separator"));
-        
-        String currFromNode = "";
-        String targetNode = "";
-        String[] words;
         while((currentLine = reader.readLine()) != null) {
-        	words=currentLine.split("\\s");
-        	if (!currFromNode.equals(words[0])) {
-        		currFromNode = words[0];
-        		if (targetString.equals(words[0])) {
-        			targetNode = currFromNode;
-        			for (int i = 1; i <= numSpamPages; i++) {
-        				int n = totalNodes + i;
-        				writer.write(currFromNode + " " + n + System.getProperty("line.separator"));
-        			}
-        		}
-        	}
             writer.write(currentLine + System.getProperty("line.separator"));
         }
         
         for (int i = 1; i <= numSpamPages; i++) {
 			int n = totalNodes + i;
-			writer.write(n + " " + targetNode + System.getProperty("line.separator"));
+			writer.write(n + " " + targetString + System.getProperty("line.separator"));
+			writer.write(targetString + " "+ n + System.getProperty("line.separator"));
 		}
 
         writer.close();
