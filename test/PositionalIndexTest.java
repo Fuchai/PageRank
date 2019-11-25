@@ -132,9 +132,10 @@ class PositionalIndexTest {
 
     @Test
     void vectorDist() {
-        double[] array1={1,2};
-        double[] array2={4,6};
-        assertTrue(Math.abs(PositionalIndex.vectorDist(array1,array2)-5)<1e-4);
+        double[] array1 = {1, 2};
+        double[] array2 = {4, 6};
+        assertTrue(Math.abs(PositionalIndex.vectorDist(array1, array2) - 5) < 1e-4);
+    }
 
     @Test
     void TestQuery1() {

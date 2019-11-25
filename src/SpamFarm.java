@@ -14,13 +14,13 @@ public class SpamFarm {
     String targetString;
     int target;
 
-    public SpamFarm(String graphFileName, int target) {
+    public SpamFarm(String graphFileName, int target, int numSpamPages) {
         this.graphFileName = graphFileName;
         this.target = target;
         this.graphFile = new File(graphFileName);
         PageRank pr = new PageRank(graphFileName);
-        targetString = pr.nodeName[target - 1];
-        numSpamPages = 500;
+        targetString = ""+target;
+        this.numSpamPages=numSpamPages;
     }
     
     String getTargetString() {

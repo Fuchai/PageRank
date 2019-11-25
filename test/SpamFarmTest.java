@@ -10,9 +10,10 @@ public class SpamFarmTest {
 	private int target = pr.getMinIndex(pr.pageRank()) + 1;
 	
 	@Test
-	void CreateAllSpamFram() {
+	void CreateAllSpamFarm() {
 		System.out.println("TARGET INDEX : " + target);
-		SpamFarm sf = new SpamFarm(DataPath.dataPath+"/WikiSportsGraph.txt", target);
+		System.out.println("Target page: "+ pr.nodeName[target]);
+		SpamFarm sf = new SpamFarm(DataPath.dataPath+"/WikiSportsGraph.txt", target, 500);
         try {
 			sf.createSpam(DataPath.dataPath+"/testfile.txt");
 			sf.createSpam2(DataPath.dataPath+"/testfile2.txt");
