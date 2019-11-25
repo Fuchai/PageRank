@@ -249,7 +249,7 @@ public class PositionalIndex {
     }
 
     double weight(String term, String doc) {
-        return Math.sqrt(termFrequency(term, doc)) + Math.log10(((double) numDoc) / docFrequency(term));
+        return Math.sqrt(termFrequency(term, doc)) * Math.log10(((double) numDoc) / docFrequency(term));
     }
     public static double vectorDist(double[] array1, double[] array2)
     {

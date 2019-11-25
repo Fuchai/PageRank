@@ -54,7 +54,7 @@ public class SpamFarm {
         			targetNode = currFromNode;
         			for (int i = 1; i <= numSpamPages; i++) {
         				int n = totalNodes + i;
-        				writer.write(currFromNode + " " + "/wiki/" + n + System.getProperty("line.separator"));
+        				writer.write(currFromNode + " " + n + System.getProperty("line.separator"));
         			}
         		}
         	}
@@ -152,7 +152,7 @@ public class SpamFarm {
         }
         for (int i = 1; i <= numSpamPages; i++) {
 			int n = totalNodes + i;
-			writer.write("/wiki/" + n + " " + targetNode + System.getProperty("line.separator"));
+			writer.write(n + " " + targetNode + System.getProperty("line.separator"));
 		}
 
         writer.close();

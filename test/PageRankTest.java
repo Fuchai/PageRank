@@ -57,5 +57,6 @@ class PageRankTest {
     	PageRank pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.01, 0.85);
         double[] ret=pr.trustRank(pr.pageRank());
     }
-
+    
+    
 }

@@ -10,7 +10,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PositionalIndexTest {
 
-
+	@Test
+	void weightVSS() {
+		PositionalIndex pi=new PositionalIndex("./test resources/files");
+		System.out.println(pi.numDoc);
+		System.out.println(pi.termFrequency("bbbb", "ab.txt"));
+		System.out.println(pi.docFrequency("bbbb"));
+        System.out.println(pi.weight("bbbb","ab.txt"));
+	}
+	
     @Test
     void initTermPosting() {
         PositionalIndex pi=new PositionalIndex(DataPath.dataPath+"/IR");
@@ -41,7 +49,7 @@ class PositionalIndexTest {
     void TPScore1() {
         PositionalIndex pi=new PositionalIndex("./test resources/files");
         double tps=pi.TPScore("b a","ab.txt");
-        assertTrue(tps-0.11764<1e-4);
+        assertTrue(tps-0.2<1e-4);
     }
 
     @Test
