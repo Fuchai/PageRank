@@ -7,7 +7,7 @@ public class QueryProcessor extends PositionalIndex{
     }
 
     ArrayList<String> topKDocs(String query, int k){
-
+        query=query.toLowerCase();
 //        long start = System.currentTimeMillis();
         double[] reles=new double[numDoc];
         for (int i = 0; i < numDoc; i++) {

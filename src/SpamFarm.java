@@ -1,10 +1,4 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.io.*;
 
 public class SpamFarm {
 	private final File graphFile;
@@ -21,10 +15,6 @@ public class SpamFarm {
 //        PageRank pr = new PageRank(graphFileName);
         targetString = target + "";
         this.numSpamPages = numSpamPages;
-    }
-
-    String getTargetString() {
-    	return targetString;
     }
 
     void createSpam(String fileName) throws IOException{
