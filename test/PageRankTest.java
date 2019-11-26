@@ -62,6 +62,37 @@ class PageRankTest {
     }
 
     @Test
+    void compare(){
+        PageRank pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.01, 0.85);
+        double[] pageRank=pr.pageRank();
+        double[] trustRank=pr.trustRank(pr.pageRank());
+        System.out.println(Arrays.toString(pageRank));
+        System.out.println(Arrays.toString(trustRank));
+        double prsum=0;
+        double trsum=0;
+        double diff=0;
+        for (int i = 0; i < pageRank.length; i++) {
+            diff+=Math.abs(trustRank[i]-pageRank[i]);
+            trsum+=Math.abs(trustRank[i]);
+            prsum+=Math.abs(pageRank[i]);
+        }
+        System.out.println(diff);
+        System.out.println(prsum);
+        System.out.println(trsum);
+
+        TopKHelper topk= new TopKHelper();
+        topk.topK(trustRank,10);
+        System.out.println(Arrays.toString(topk.indices));
+        topk.topK(pageRank,10);
+        System.out.println(Arrays.toString(topk.indices));
+
+        topk.topK(trustRank,10, true);
+        System.out.println(Arrays.toString(topk.indices));
+        topk.topK(pageRank,10, true);
+        System.out.println(Arrays.toString(topk.indices));
+    }
+
+    @Test
     void POP(){
         double beta=0.95;
         PageRank pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.000001, beta);
