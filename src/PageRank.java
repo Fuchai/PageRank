@@ -20,19 +20,10 @@ public class PageRank {
     int trustStepsTaken;
 
     public static void main(String[] args) {
-        PageRank pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.01, 0.85);
+        PageRank pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.0001, 0.85);
         pr.correctGraph(DataPath.dataPath+"/correctGraph.txt");
         pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.01, 0.85);
 //        pr.correctGraph(DataPath.dataPath+"/correctGraph.txt");
-    }
-
-    public PageRank(String graphFileName) {
-    	this.graphFileName = graphFileName;
-    	this.graphFile = new File(graphFileName);
-    	epsilon = 0.1;
-    	beta = 0.85;
-    	processGraph(graphFile);
-    	approxPageRank();
     }
 
     public PageRank(String graphFileName, double epsilon, double beta) {
@@ -59,7 +50,7 @@ public class PageRank {
             p=newP;
             step++;
             if (step == 100000) {
-                System.out.println("This is too many runs. I will abort the program");
+                System.out.println("This is too many random walks. I will abort the program");
                 System.exit(-1);
             }
         }
