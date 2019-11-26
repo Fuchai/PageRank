@@ -55,7 +55,8 @@ class PageRankTest {
 
     @Test
     void POP(){
-        PageRank pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.001, 0.95);
+    	double beta=0.95;
+    	PageRank pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.000001, beta);
         int numPages=pr.fromToMatrix.length;
         double[][] o =new double[numPages][numPages];
         for (int i = 0; i < numPages; i++) {
@@ -65,13 +66,21 @@ class PageRankTest {
         for (int i = 0; i <pr.fromToMatrix.length; i++) {
             for (int j = 0; j < pr.fromToMatrix.length; j++) {
                 if (pr.totalLinks[i]==0) {
+                	// N tilde
                     o[i][j] = 1.0 / numPages;
                 }else{
                     if(pr.fromToMatrix[i][j]){
+                    	// M tilde
                         o[i][j]=1.0/pr.totalLinks[i];
                     }
                 }
             }
+        }
+        
+        for (int i = 0; i < numPages; i++) {
+        	for (int j = 0; j < numPages; j++) {
+        		o[i][j]=beta*o[i][j]+(1-beta)/numPages;
+        	}
         }
 
         double [] rank = pr.pageRank();

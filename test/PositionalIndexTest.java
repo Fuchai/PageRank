@@ -168,6 +168,9 @@ class PositionalIndexTest {
     	System.out.println("Top 10 files VSS : " + Arrays.toString(t.indices));
     	t.topK(RelevanceList, 10);
     	System.out.println("Top 10 files Relevance : " + Arrays.toString(t.indices));
+    	QueryProcessor q = new QueryProcessor(DataPath.dataPath+"/IR");
+    	ArrayList<String> ret=q.topKDocs(query, 10);
+    	System.out.println("Top 10 files Relevance : " + ret.toString());
     }
 
     @Test
@@ -193,6 +196,9 @@ class PositionalIndexTest {
     	System.out.println("Top 10 files VSS : " + Arrays.toString(t.indices));
     	t.topK(RelevanceList, 10);
     	System.out.println("Top 10 files Relevance : " + Arrays.toString(t.indices));
+    	QueryProcessor q = new QueryProcessor(DataPath.dataPath+"/IR");
+    	ArrayList<String> ret=q.topKDocs(query, 10);
+    	System.out.println("Top 10 files Relevance : " + ret.toString());
     }
 
     @Test
@@ -218,6 +224,9 @@ class PositionalIndexTest {
     	System.out.println("Top 10 files VSS : " + Arrays.toString(t.indices));
     	t.topK(RelevanceList, 10);
     	System.out.println("Top 10 files Relevance : " + Arrays.toString(t.indices));
+    	QueryProcessor q = new QueryProcessor(DataPath.dataPath+"/IR");
+    	ArrayList<String> ret=q.topKDocs(query, 10);
+    	System.out.println("Top 10 files Relevance : " + ret.toString());
     }
 
     @Test
@@ -243,6 +252,9 @@ class PositionalIndexTest {
     	System.out.println("Top 10 files VSS : " + Arrays.toString(t.indices));
     	t.topK(RelevanceList, 10);
     	System.out.println("Top 10 files Relevance : " + Arrays.toString(t.indices));
+    	QueryProcessor q = new QueryProcessor(DataPath.dataPath+"/IR");
+    	ArrayList<String> ret=q.topKDocs(query, 10);
+    	System.out.println("Top 10 files Relevance : " + ret.toString());
     }
 
     @Test
@@ -268,5 +280,8 @@ class PositionalIndexTest {
     	System.out.println("Top 10 files VSS : " + Arrays.toString(t.indices));
     	t.topK(RelevanceList, 10);
     	System.out.println("Top 10 files Relevance : " + Arrays.toString(t.indices));
+    	QueryProcessor q = new QueryProcessor(DataPath.dataPath+"/IR");
+    	ArrayList<String> ret=q.topKDocs(query, 10);
+    	System.out.println("Top 10 files Relevance : " + ret.toString());
     }
 }

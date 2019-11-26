@@ -19,4 +19,32 @@ class QueryProcessorTest {
         ArrayList<String> ret=qp.topKDocs("a aa", 5);
         System.out.println(ret.toString());
     }
+    
+    @Test
+    void topKDocs3() {
+        QueryProcessor qp=new QueryProcessor(DataPath.dataPath+"/IR");
+        ArrayList<String> ret=qp.topKDocs("national", 5);
+        System.out.println(ret.toString());
+    }
+    
+    @Test
+    void topKDocs4() {
+        QueryProcessor qp=new QueryProcessor(DataPath.dataPath+"/IR");
+        ArrayList<String> ret=qp.topKDocs("advantage of propitious", 5);
+        System.out.println(ret.toString());
+    }
+
+    @Test
+    void topKDocs5() {
+        QueryProcessor qp=new QueryProcessor(DataPath.dataPath+"/IR");
+        ArrayList<String> ret=qp.topKDocs("exact origin of the phrase", 5);
+        System.out.println(ret.toString());
+    }
+    
+    @Test
+    void topKDocs6() {
+        QueryProcessor qp=new QueryProcessor(DataPath.dataPath+"/IR");
+        ArrayList<String> ret=qp.topKDocs("the diamond was in the north end of the block", 5);
+        System.out.println(ret.toString());
+    }
 }
