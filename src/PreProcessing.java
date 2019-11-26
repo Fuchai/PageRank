@@ -6,19 +6,6 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class PreProcessing {
-	
-	public static void main(String[] args) {
-		PreProcessing pr = new PreProcessing();
-		File tempFile = new File(DataPath.dataPath+"/testPre.txt");
-        String[] arr = pr.process(tempFile);
-        for (int i = 0; i < arr.length; i++) {
-        	System.out.println(arr[i] + i);
-        }
-    } 
-	
-	public PreProcessing() {
-		
-	}
 
     // from the last project
 	public static String[] process(File file) {
@@ -48,6 +35,5 @@ public class PreProcessing {
         // will not reach
         return null;
     }
-
 
 }
