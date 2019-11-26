@@ -1,4 +1,6 @@
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,6 +51,45 @@ class PageRankTest {
         double[] ret=pr.trustRank(pr.pageRank());
         System.out.println(Arrays.toString(ret));
         System.out.println("Steps taken for trust rank: "+pr.trustStepsTaken);
+    }
+
+    @Test
+    void POP(){
+        PageRank pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.001, 0.95);
+        int numPages=pr.fromToMatrix.length;
+        double[][] o =new double[numPages][numPages];
+        for (int i = 0; i < numPages; i++) {
+            Arrays.fill(o[i],0);
+        }
+
+        for (int i = 0; i <pr.fromToMatrix.length; i++) {
+            for (int j = 0; j < pr.fromToMatrix.length; j++) {
+                if (pr.totalLinks[i]==0) {
+                    o[i][j] = 1.0 / numPages;
+                }else{
+                    if(pr.fromToMatrix[i][j]){
+                        o[i][j]=1.0/pr.totalLinks[i];
+                    }
+                }
+            }
+        }
+
+        double [] rank = pr.pageRank();
+        double[] matmul=new double[numPages];
+        Arrays.fill(matmul,0);
+        for (int i = 0; i < pr.fromToMatrix.length; i++) {
+            double v = rank[i];
+            for (int j = 0; j < pr.fromToMatrix.length; j++) {
+                matmul[j]+=o[i][j]*v;
+            }
+        }
+        System.out.println(Arrays.toString(rank));
+        System.out.println(Arrays.toString(matmul));
+        double diff=0;
+        for (int i = 0; i < numPages; i++) {
+            diff+=(Math.abs(rank[i]-matmul[i]));
+        }
+        System.out.println(diff);
     }
     
     

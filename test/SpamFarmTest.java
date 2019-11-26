@@ -23,8 +23,8 @@ public class SpamFarmTest {
 
 	@Test
 	void FarmTargetPageRank() {
-		System.out.println("target node name: "+target);
-		System.out.println("internal node index: "+pr.nameNode.get(""+target));
+		CreateAllSpamFarm();
+		System.out.println("Internal node index: "+pr.nameNode.get(""+target));
 		PageRank spamRank = new PageRank(DataPath.dataPath+"/testfile.txt", 0.1, 0.85);
 
 
