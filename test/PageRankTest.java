@@ -39,7 +39,7 @@ class PageRankTest {
         PageRank pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.01, 0.85);
         System.out.println("Steps:"+pr.stepsTaken);
         System.out.println("epsilon=0.01, beta=0.25");
-        pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.01, 0.25);
+        pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.01, 0.25);
         System.out.println("Steps:"+pr.stepsTaken);
     }
 
@@ -50,6 +50,5 @@ class PageRankTest {
         System.out.println(Arrays.toString(ret));
         System.out.println("Steps taken for trust rank: "+pr.trustStepsTaken);
     }
-    
     
 }

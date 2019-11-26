@@ -32,6 +32,7 @@ public class PageRank {
     	epsilon = 0.1;
     	beta = 0.85;
     	processGraph(graphFile);
+    	approxPageRank();
     }
 
     public PageRank(String graphFileName, double epsilon, double beta) {

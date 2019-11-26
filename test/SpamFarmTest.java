@@ -15,7 +15,6 @@ public class SpamFarmTest {
 		SpamFarm sf = new SpamFarm(DataPath.dataPath+"/correctGraph.txt", target, 500);
         try {
 			sf.createSpam(DataPath.dataPath+"/testfile.txt");
-//			System.out.println(pr.nodeName[target - 1]);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
