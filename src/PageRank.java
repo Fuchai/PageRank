@@ -19,12 +19,6 @@ public class PageRank {
     int stepsTaken;
     int trustStepsTaken;
 
-    public static void main(String[] args) {
-        PageRank pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.0001, 0.85);
-        pr.correctGraph(DataPath.dataPath+"/correctGraph.txt");
-        pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.01, 0.85);
-//        pr.correctGraph(DataPath.dataPath+"/correctGraph.txt");
-    }
 
     public PageRank(String graphFileName, double epsilon, double beta) {
         this.graphFileName = graphFileName;
@@ -58,7 +52,7 @@ public class PageRank {
         stepsTaken=step;
     }
 
-    private double norm(double[] p, double[] newP) {
+    public double norm(double[] p, double[] newP) {
         double normSum=0;
         for (int i = 0; i < p.length; i++) {
             normSum+=Math.abs(p[i]-newP[i]);
@@ -66,7 +60,7 @@ public class PageRank {
         return normSum;
     }
 
-    private double[] walk(double[] oldRank) {
+    public double[] walk(double[] oldRank) {
         int n = oldRank.length;
         double[] newRank = new double[n];
         Arrays.fill(newRank, (1-beta)/n);
@@ -191,11 +185,11 @@ public class PageRank {
         }
     }
 
-    double pageRankOf(int vertex){
+    public double pageRankOf(int vertex){
         return rank[nameNode.get(""+vertex)];
     }
 
-    double[] pageRank(){
+    public double[] pageRank(){
         return rank;
     }
     
@@ -225,7 +219,7 @@ public class PageRank {
 //        return tr;
 //    }
 
-    double[] trustRank(double[] trust){
+    public double[] trustRank(double[] trust){
         TopKHelper topk=new TopKHelper();
         topk.topK(trust,trust.length/4);
         int[] trustPages = topk.indices;
@@ -283,7 +277,7 @@ public class PageRank {
         return newRank;
     }
 
-    int numEdges(){
+    public int numEdges(){
         int total=0;
         for (int i = 0; i < totalLinks.length; i++) {
             total+=totalLinks[i];
@@ -292,7 +286,7 @@ public class PageRank {
     }
 
 
-    int[] topKPageRank(int k){
+    public int[] topKPageRank(int k){
         TopKHelper topk=new TopKHelper();
         topk.topK(rank,k);
         int[] indices= topk.indices;
@@ -304,7 +298,7 @@ public class PageRank {
 //        return names;
     }
 
-    int[] indicesToNames(int[] indices){
+    public int[] indicesToNames(int[] indices){
         int[] names=new int[indices.length];
         for (int i = 0; i < indices.length; i++) {
             names[i]= Integer.parseInt(nodeName[indices[i]]);

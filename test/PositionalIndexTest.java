@@ -1,12 +1,8 @@
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PositionalIndexTest {
 
@@ -145,171 +141,57 @@ class PositionalIndexTest {
         assertTrue(Math.abs(PositionalIndex.vectorDist(array1, array2) - 5) < 1e-4);
     }
 
-    @Test
-    void TestQuery1() {
+    void TestQuery(String query) {
     	PositionalIndex pi=new PositionalIndex(DataPath.dataPath+"/IR");
-    	String query = "national";
-    	File[] files = pi.folder.listFiles();
-    	TopKHelper t = new TopKHelper();
-    	double[] TPSList = new double[files.length];
-    	double[] VSSList = new double[files.length];
-    	double[] RelevanceList = new double[files.length];
-    	for (int i = 0; i < files.length; i++) {
-            if (files[i].isFile()) {
-            	String doc = files[i].getName();
-            	TPSList[i] = pi.TPScore(query, doc);
-            	VSSList[i] = pi.VSScore(query, doc);
-            	RelevanceList[i] = pi.Relevance(query, doc);
-            }
+    	TopKHelper topk = new TopKHelper();
+    	double[] TPSList = new double[pi.docs.length];
+    	double[] VSSList = new double[pi.docs.length];
+    	double[] RelevanceList = new double[pi.docs.length];
+    	for (int i = 0; i < pi.docs.length; i++) {
+            String doc = pi.docs[i];
+            TPSList[i] = pi.TPScore(query, doc);
+            VSSList[i] = pi.VSScore(query, doc);
+            RelevanceList[i] = pi.Relevance(query, doc);
     	}
-    	t.topK(TPSList, 10);
-    	System.out.println("Top 10 files TPS : " + Arrays.toString(t.indices));
-    	t.topK(VSSList, 10);
-    	System.out.println("Top 10 files VSS : " + Arrays.toString(t.indices));
-    	t.topK(RelevanceList, 10);
-    	System.out.println("Top 10 files Relevance : " + Arrays.toString(t.indices));
-    	QueryProcessor q = new QueryProcessor(DataPath.dataPath+"/IR");
-    	ArrayList<String> ret=q.topKDocs(query, 10);
-    	System.out.println("Top 10 files Relevance : " + ret.toString());
+    	topk.topK(TPSList, 10);
+    	System.out.println("Top 10 files TPS : " + Arrays.toString(indicesToNames(topk.indices, pi.docs)));
+    	topk.topK(VSSList, 10);
+    	System.out.println("Top 10 files VSS : " + Arrays.toString(indicesToNames(topk.indices, pi.docs)));
+    	topk.topK(RelevanceList, 10);
+    	System.out.println("Top 10 files Relevance : " + Arrays.toString(indicesToNames(topk.indices, pi.docs)));
+    }
+
+    String[] indicesToNames(int[] indices, String[] docs){
+	    String[] names = new String[indices.length];
+        for (int i = 0; i < indices.length; i++) {
+            names[i]=docs[indices[i]];
+        }
+        return names;
     }
 
     @Test
-    void TestQuery2() {
-    	PositionalIndex pi=new PositionalIndex(DataPath.dataPath+"/IR");
-    	String query = "bad luck";
-    	File[] files = pi.folder.listFiles();
-    	TopKHelper t = new TopKHelper();
-    	double[] TPSList = new double[files.length];
-    	double[] VSSList = new double[files.length];
-    	double[] RelevanceList = new double[files.length];
-    	for (int i = 0; i < files.length; i++) {
-            if (files[i].isFile()) {
-            	String doc = files[i].getName();
-            	TPSList[i] = pi.TPScore(query, doc);
-            	VSSList[i] = pi.VSScore(query, doc);
-            	RelevanceList[i] = pi.Relevance(query, doc);
-            }
-    	}
-    	t.topK(TPSList, 10);
-    	System.out.println("Top 10 files TPS : " + Arrays.toString(t.indices));
-    	t.topK(VSSList, 10);
-    	System.out.println("Top 10 files VSS : " + Arrays.toString(t.indices));
-    	t.topK(RelevanceList, 10);
-    	System.out.println("Top 10 files Relevance : " + Arrays.toString(t.indices));
-    	QueryProcessor q = new QueryProcessor(DataPath.dataPath+"/IR");
-    	ArrayList<String> ret=q.topKDocs(query, 10);
-    	System.out.println("Top 10 files Relevance : " + ret.toString());
+    void TestQuery1(){
+	    TestQuery("national");
     }
 
     @Test
-    void TestQuery3() {
-    	PositionalIndex pi=new PositionalIndex(DataPath.dataPath+"/IR");
-    	String query = "advantage of propitious";
-    	File[] files = pi.folder.listFiles();
-    	TopKHelper t = new TopKHelper();
-    	double[] TPSList = new double[files.length];
-    	double[] VSSList = new double[files.length];
-    	double[] RelevanceList = new double[files.length];
-    	for (int i = 0; i < files.length; i++) {
-            if (files[i].isFile()) {
-            	String doc = files[i].getName();
-            	TPSList[i] = pi.TPScore(query, doc);
-            	VSSList[i] = pi.VSScore(query, doc);
-            	RelevanceList[i] = pi.Relevance(query, doc);
-            }
-    	}
-    	t.topK(TPSList, 10);
-    	System.out.println("Top 10 files TPS : " + Arrays.toString(t.indices));
-    	t.topK(VSSList, 10);
-    	System.out.println("Top 10 files VSS : " + Arrays.toString(t.indices));
-    	t.topK(RelevanceList, 10);
-    	System.out.println("Top 10 files Relevance : " + Arrays.toString(t.indices));
-    	QueryProcessor q = new QueryProcessor(DataPath.dataPath+"/IR");
-    	ArrayList<String> ret=q.topKDocs(query, 10);
-    	System.out.println("Top 10 files Relevance : " + ret.toString());
+    void TestQuery2(){
+        TestQuery("bad luck");
     }
 
     @Test
-    void TestQuery4() {
-    	PositionalIndex pi=new PositionalIndex(DataPath.dataPath+"/IR");
-    	String query = "exact origin of the phrase";
-    	File[] files = pi.folder.listFiles();
-    	TopKHelper t = new TopKHelper();
-    	double[] TPSList = new double[files.length];
-    	double[] VSSList = new double[files.length];
-    	double[] RelevanceList = new double[files.length];
-    	for (int i = 0; i < files.length; i++) {
-            if (files[i].isFile()) {
-            	String doc = files[i].getName();
-            	TPSList[i] = pi.TPScore(query, doc);
-            	VSSList[i] = pi.VSScore(query, doc);
-            	RelevanceList[i] = pi.Relevance(query, doc);
-            }
-    	}
-    	t.topK(TPSList, 10);
-    	System.out.println("Top 10 files TPS : " + Arrays.toString(t.indices));
-    	t.topK(VSSList, 10);
-    	System.out.println("Top 10 files VSS : " + Arrays.toString(t.indices));
-    	t.topK(RelevanceList, 10);
-    	System.out.println("Top 10 files Relevance : " + Arrays.toString(t.indices));
-    	QueryProcessor q = new QueryProcessor(DataPath.dataPath+"/IR");
-    	ArrayList<String> ret=q.topKDocs(query, 10);
-    	System.out.println("Top 10 files Relevance : " + ret.toString());
+    void TestQuery3(){
+        TestQuery("advantage of propitious");
     }
 
     @Test
-    void TestQuery5() {
-    	PositionalIndex pi=new PositionalIndex(DataPath.dataPath+"/IR");
-    	String query = "the diamond was in the north end of the block";
-    	File[] files = pi.folder.listFiles();
-    	TopKHelper t = new TopKHelper();
-    	double[] TPSList = new double[files.length];
-    	double[] VSSList = new double[files.length];
-    	double[] RelevanceList = new double[files.length];
-    	for (int i = 0; i < files.length; i++) {
-            if (files[i].isFile()) {
-            	String doc = files[i].getName();
-            	TPSList[i] = pi.TPScore(query, doc);
-            	VSSList[i] = pi.VSScore(query, doc);
-            	RelevanceList[i] = pi.Relevance(query, doc);
-            }
-    	}
-    	t.topK(TPSList, 10);
-    	System.out.println("Top 10 files TPS : " + Arrays.toString(t.indices));
-    	t.topK(VSSList, 10);
-    	System.out.println("Top 10 files VSS : " + Arrays.toString(t.indices));
-    	t.topK(RelevanceList, 10);
-    	System.out.println("Top 10 files Relevance : " + Arrays.toString(t.indices));
-    	QueryProcessor q = new QueryProcessor(DataPath.dataPath+"/IR");
-    	ArrayList<String> ret=q.topKDocs(query, 10);
-    	System.out.println("Top 10 files Relevance : " + ret.toString());
+    void TestQuery4(){
+        TestQuery("exact origin of the phrase");
     }
-    
+
     @Test
-    void TestQuery6() {
-    	PositionalIndex pi=new PositionalIndex("./test resources/files");
-    	String query = "aaaa aa";
-    	File[] files = pi.folder.listFiles();
-    	TopKHelper t = new TopKHelper();
-    	double[] TPSList = new double[files.length];
-    	double[] VSSList = new double[files.length];
-    	double[] RelevanceList = new double[files.length];
-    	for (int i = 0; i < files.length; i++) {
-            if (files[i].isFile()) {
-            	String doc = files[i].getName();
-            	TPSList[i] = pi.TPScore(query, doc);
-            	VSSList[i] = pi.VSScore(query, doc);
-            	RelevanceList[i] = pi.Relevance(query, doc);
-            }
-    	}
-    	t.topK(TPSList, 5);
-    	System.out.println("TPS : " + Arrays.toString(t.indices));
-    	t.topK(VSSList, 5);
-    	System.out.println("VSS : " + Arrays.toString(t.indices));
-    	t.topK(RelevanceList, 5);
-    	System.out.println("Relevance : " + Arrays.toString(t.indices));
-    	QueryProcessor q = new QueryProcessor("./test resources/files");
-    	ArrayList<String> ret=q.topKDocs(query, 5);
-    	System.out.println(ret.toString());
+    void TestQuery5(){
+	    TestQuery("the diamond was in the north end of the block");
     }
+
 }

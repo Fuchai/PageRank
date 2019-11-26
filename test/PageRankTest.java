@@ -1,8 +1,8 @@
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PageRankTest {
 
@@ -43,6 +43,14 @@ class PageRankTest {
         System.out.println("epsilon=0.01, beta=0.25");
         pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.01, 0.25);
         System.out.println("Steps:"+pr.stepsTaken);
+
+
+        System.out.println("epsilon=0.0001, beta=0.85");
+        pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.0001, 0.85);
+        System.out.println("Steps:"+pr.stepsTaken);
+        System.out.println("epsilon=0.0001, beta=0.25");
+        pr = new PageRank(DataPath.dataPath+"/WikiSportsGraph.txt", 0.0001, 0.25);
+        System.out.println("Steps:"+pr.stepsTaken);
     }
 
     @Test
@@ -54,9 +62,40 @@ class PageRankTest {
     }
 
     @Test
+    void compare(){
+        PageRank pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.01, 0.85);
+        double[] pageRank=pr.pageRank();
+        double[] trustRank=pr.trustRank(pr.pageRank());
+        System.out.println(Arrays.toString(pageRank));
+        System.out.println(Arrays.toString(trustRank));
+        double prsum=0;
+        double trsum=0;
+        double diff=0;
+        for (int i = 0; i < pageRank.length; i++) {
+            diff+=Math.abs(trustRank[i]-pageRank[i]);
+            trsum+=Math.abs(trustRank[i]);
+            prsum+=Math.abs(pageRank[i]);
+        }
+        System.out.println(diff);
+        System.out.println(prsum);
+        System.out.println(trsum);
+
+        TopKHelper topk= new TopKHelper();
+        topk.topK(trustRank,10);
+        System.out.println(Arrays.toString(topk.indices));
+        topk.topK(pageRank,10);
+        System.out.println(Arrays.toString(topk.indices));
+
+        topk.topK(trustRank,10, true);
+        System.out.println(Arrays.toString(topk.indices));
+        topk.topK(pageRank,10, true);
+        System.out.println(Arrays.toString(topk.indices));
+    }
+
+    @Test
     void POP(){
-    	double beta=0.95;
-    	PageRank pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.000001, beta);
+        double beta=0.95;
+        PageRank pr = new PageRank(DataPath.dataPath+"/correctGraph.txt", 0.000001, beta);
         int numPages=pr.fromToMatrix.length;
         double[][] o =new double[numPages][numPages];
         for (int i = 0; i < numPages; i++) {
@@ -66,11 +105,11 @@ class PageRankTest {
         for (int i = 0; i <pr.fromToMatrix.length; i++) {
             for (int j = 0; j < pr.fromToMatrix.length; j++) {
                 if (pr.totalLinks[i]==0) {
-                	// N tilde
+                    // N tilde
                     o[i][j] = 1.0 / numPages;
                 }else{
                     if(pr.fromToMatrix[i][j]){
-                    	// M tilde
+                        // M tilde
                         o[i][j]=1.0/pr.totalLinks[i];
                     }
                 }
@@ -81,6 +120,13 @@ class PageRankTest {
         	for (int j = 0; j < numPages; j++) {
         		o[i][j]=beta*o[i][j]+(1-beta)/numPages;
         	}
+        }
+
+        // O
+        for (int i = 0; i < numPages; i++) {
+            for (int j = 0; j < numPages; j++) {
+                o[i][j]=beta*o[i][j]+(1-beta)/numPages;
+            }
         }
 
         double [] rank = pr.pageRank();

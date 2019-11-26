@@ -9,7 +9,7 @@ public class PositionalIndex {
     String folderName;
     String[] docs;
     //	List<String> allUniqueTerms;
-//	HashMap<String, TDFT> dict;
+    //	HashMap<String, TDFT> dict;
     // Inverted Index, term -> postings. A posting is all the indices of the term in
     // a particular document
     HashMap<String, Posting[]> termPostings;
@@ -32,7 +32,7 @@ public class PositionalIndex {
     }
 
 
-    void initTermPosting() {
+    public void initTermPosting() {
 //        List<String> allUniqueTerms = new ArrayList<>();
         File[] contents = folder.listFiles();
         uniqueWordIndex = new HashMap<>();
@@ -107,7 +107,7 @@ public class PositionalIndex {
         return uniqueWordIndex.keySet();
     }
 
-    int termFrequency(String term, String doc) {
+    public int termFrequency(String term, String doc) {
         Posting[] postings = termPostings.get(term);
         if (postings==null){
             return 0;
@@ -120,7 +120,7 @@ public class PositionalIndex {
         return 0;
     }
 
-    int docFrequency(String term) {
+    public int docFrequency(String term) {
         if (termPostings.containsKey(term)){
             return termPostings.get(term).length;
         }else{
@@ -129,7 +129,7 @@ public class PositionalIndex {
     }
 
 
-    String postingsList(String term) {
+    public String postingsList(String term) {
         if (!termPostings.containsKey(term)){
             return "[]";
         }
@@ -160,7 +160,8 @@ public class PositionalIndex {
 
 
 
-    double TPScore(String query, String doc) {
+    public double TPScore(String query, String doc) {
+        query=query.toLowerCase();
         String[] queryWords = query.split("\\s");
         if (queryWords.length == 1 || queryWords.length == 0) {
             return 0;
@@ -175,8 +176,8 @@ public class PositionalIndex {
         return ret;
     }
 
-    double dist(String doc, String t1, String t2) {
-        double arbitrary=17;
+    public double dist(String doc, String t1, String t2) {
+        double arbitrary=171717;
 
         Posting[] postings1 = termPostings.get(t1);
         Posting[] postings2 = termPostings.get(t2);
@@ -221,7 +222,8 @@ public class PositionalIndex {
         return minDiff;
     }
 
-    double VSScore(String query, String doc) {
+    public double VSScore(String query, String doc) {
+        query=query.toLowerCase();
         // The query order is changed, which does not change the VSScore due to symmetry of cosine similarity.
     	
         String[] queryWords = query.split("\\s");
@@ -260,7 +262,10 @@ public class PositionalIndex {
         return sum / distMult;
     }
 
-    double weight(String term, String doc) {
+    public double weight(String term, String doc) {
+        if (docFrequency(term)==0){
+            return 0;
+        }
         return Math.sqrt(termFrequency(term, doc)) * Math.log10(((double) numDoc) / docFrequency(term));
     }
 
@@ -280,7 +285,8 @@ public class PositionalIndex {
         return Math.sqrt(sum);
     }
 
-    double Relevance(String query, String doc) {
+    public double Relevance(String query, String doc) {
+        query=query.toLowerCase();
         return 0.6*TPScore(query, doc) + 0.4*VSScore(query, doc);
     }
 }
@@ -300,12 +306,6 @@ class Posting {
     private int[] poss;
 
 
-
-    Posting(String doc, int[] poss) {
-        this.doc = doc;
-        this.setPoss(poss);
-    }
-
     Posting(String doc, ArrayList<Integer> poss) {
         this.doc = doc;
         this.setPoss(poss);
@@ -322,18 +322,6 @@ class Posting {
                 System.exit(-1);
             }
             this.poss[i]=pos;
-            last = pos;
-        }
-    }
-
-    public void setPoss(int[] poss) {
-        this.poss = poss;
-        int last = Integer.MIN_VALUE;
-        for (Integer pos : poss) {
-            if (pos < last) {
-                System.out.println("You must sort the postings.");
-                System.exit(-1);
-            }
             last = pos;
         }
     }
