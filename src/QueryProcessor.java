@@ -11,6 +11,8 @@ public class QueryProcessor extends PositionalIndex{
 //        long start = System.currentTimeMillis();
         double[] reles=new double[numDoc];
         for (int i = 0; i < numDoc; i++) {
+        	System.out.println(VSScore(query, docs[i]));
+        	System.out.println(TPScore(query, docs[i]));
             reles[i]=Relevance(query, docs[i]);
         }
         TopKHelper topk = new TopKHelper();

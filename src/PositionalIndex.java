@@ -223,7 +223,7 @@ public class PositionalIndex {
 
     double VSScore(String query, String doc) {
         // The query order is changed, which does not change the VSScore due to symmetry of cosine similarity.
-
+    	
         String[] queryWords = query.split("\\s");
         if (queryWords.length == 0) {
             return 0;
@@ -232,7 +232,7 @@ public class PositionalIndex {
         queryWords=querySet.toArray(new String[querySet.size()]);
         double[] vectorD = new double[queryWords.length];
         double[] vectorQ = new double[queryWords.length];
-
+        
         String term;
         double docWeight, queryWeight, sum = 0;
 
@@ -253,8 +253,11 @@ public class PositionalIndex {
         Arrays.fill(base, 0.0);
         double distD = vectorDist(base, vectorD);
         double distQ = vectorDist(base, vectorQ);
+        double distMult = distD*distQ;
+        if (distMult == 0.0)
+        	return 0.0;
 
-        return sum / (distD*distQ);
+        return sum / distMult;
     }
 
     double weight(String term, String doc) {
