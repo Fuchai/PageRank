@@ -284,4 +284,32 @@ class PositionalIndexTest {
     	ArrayList<String> ret=q.topKDocs(query, 10);
     	System.out.println("Top 10 files Relevance : " + ret.toString());
     }
+    
+    @Test
+    void TestQuery6() {
+    	PositionalIndex pi=new PositionalIndex("./test resources/files");
+    	String query = "aaaa aa";
+    	File[] files = pi.folder.listFiles();
+    	TopKHelper t = new TopKHelper();
+    	double[] TPSList = new double[files.length];
+    	double[] VSSList = new double[files.length];
+    	double[] RelevanceList = new double[files.length];
+    	for (int i = 0; i < files.length; i++) {
+            if (files[i].isFile()) {
+            	String doc = files[i].getName();
+            	TPSList[i] = pi.TPScore(query, doc);
+            	VSSList[i] = pi.VSScore(query, doc);
+            	RelevanceList[i] = pi.Relevance(query, doc);
+            }
+    	}
+    	t.topK(TPSList, 5);
+    	System.out.println("TPS : " + Arrays.toString(t.indices));
+    	t.topK(VSSList, 5);
+    	System.out.println("VSS : " + Arrays.toString(t.indices));
+    	t.topK(RelevanceList, 5);
+    	System.out.println("Relevance : " + Arrays.toString(t.indices));
+    	QueryProcessor q = new QueryProcessor("./test resources/files");
+    	ArrayList<String> ret=q.topKDocs(query, 5);
+    	System.out.println(ret.toString());
+    }
 }
